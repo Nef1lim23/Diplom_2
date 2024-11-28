@@ -1,6 +1,4 @@
-import requests
-import random
-import string
+
 from faker import Faker
 import data
 import requests
@@ -18,3 +16,13 @@ def create_random_creds():
         "name": name,
     }
     return payload
+
+
+def auth_user_and_get_creds():
+    payload = create_random_creds()
+    response = requests.post(f'{URLs.POST_CREATE_USER}', json=payload)
+    return payload, response
+
+
+def get_access_token(response):
+    return response.json().get('accessToken')

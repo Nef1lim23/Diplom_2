@@ -1,34 +1,30 @@
 import allure
-import pytest
-from data import *
-
-from methods.courier_methods import CourierMethods
+from methods.user_methods import UserMethods
 
 
 class TestCouriersEndpoints:
 
-    @allure.title('Проверка успешного создания курьера')
-    @allure.description('Проверяем код ответа и тело')
-    def test_create_courier_success(self, create_courier):
-        courier_methods = CourierMethods()
-        login_pass, r = create_courier
-        assert r.status_code == 200 and r.json()['success'] is True
-        courier_methods.delete_created_courier(login_pass)
+    @allure.title('Проверка создания уникального пользователя')
+    @allure.description('Создаем уникального user с Faker и удаляем его по токену после теста'
+                                                            'В ответе проверяются код и тело')
+    def test_create_new_user_success(self, create_and_delete_user):
+        payload, response = create_and_delete_user
+        deserialization = response.json()
+        assert response.status_code == 200 and response.json().get('success') is True
+        assert 'accessToken' in deserialization and deserialization['accessToken'] != ''
+        assert 'refreshToken' in deserialization and deserialization['refreshToken'] != ''
+        assert deserialization['user']['email'] == payload['email']
+        assert deserialization['user']['name'] == payload['name']
 
-    @allure.title('Проверка,что нельзя создать двух одинаковых курьеров')
-    @allure.description('попытка создать дубль курьера, так же проверка кода ответа и сообщения')
-    def test_create_courier_duplicate(self, create_courier):
-        courier_methods = CourierMethods()
-        login_pass, _ = create_courier
-        r = courier_methods.post_create_couriers_identical(login_pass)
-        assert r.json()['code'] == 409 and Errors.error_create_409_already_exist in r.json()['message']
-        courier_methods.post_create_couriers_identical(login_pass)
-        courier_methods.delete_created_courier(login_pass)
+    @allure.title('создание пользователя, который уже зарегистрирован')
+    def test_create_already_exist_user(self, create_and_delete_user):
+        create_courier = UserMethods()
+        payload, _ = create_and_delete_user
+        r = create_courier.post_create_couriers(payload)
+        deserialization = r.json()
+        assert r.status_code == 403
+        assert deserialization['success'] is False and deserialization['message'] == 'User already exists'
 
-    @allure.title('Проверка создания курьера без обязательного поля')
-    @allure.description('Создаем курьера убирая одно обязательное поле ')
-    @pytest.mark.parametrize('payload', InvalidDataForRegistration.payloads)
-    def test_create_courier_missing_field(self, payload):
-        courier_methods = CourierMethods()
-        r = courier_methods.post_create_couriers(payload)
-        assert r.json()['code'] == 400 and Errors.error_create_400_no_data in r.json()['message']
+    # @allure.title('создание пользователя без обязательльного поля')
+    # def test_create_user_without_required_field(self, create_and_delete_user):
+    #
