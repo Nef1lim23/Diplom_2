@@ -1,6 +1,4 @@
-
 from faker import Faker
-import data
 import requests
 from data import URLs
 

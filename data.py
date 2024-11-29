@@ -1,9 +1,9 @@
 class URLs:
     BASE_URL = 'https://stellarburgers.nomoreparties.site/'
     POST_CREATE_USER = f'{BASE_URL}api/auth/register'
-    LOGIN_COURIER_URL = f'{BASE_URL}login'
+    LOGIN_COURIER_URL = f'{BASE_URL}api/auth/login'
     DELETE_COURIER_URL = f'{BASE_URL}api/auth/user/'    # возможно тут вместо юзера идет ИД
-    sdasd = 'https://stellarburgers.nomoreparties.site/api/auth/user'
+
 
 
 class Errors:
@@ -26,13 +26,19 @@ class InvalidDataForRegistration:
     payloads = [
         {
             'name': 'Rick',
-            'login': 'korneev_14@gmail.ru',
+            'email': 'korneev_14123@gmail.ru',
             'password': ''
 
         },
         {
-            'name': 'Rick',
-            'login': '',
+            'name': 'Rick12',
+            'email': '',
+            'password': '123123'
+
+        },
+        {
+            'name': '',
+            'email': 'korneev_1456546@gmail.ru',
             'password': '123123'
 
         }
