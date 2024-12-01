@@ -2,8 +2,23 @@ import requests
 from data import *
 import allure
 
+from helpers import get_login_payload, generate_wrong_creds
+from methods.user_methods import UserMethods
 
-#class TestLoginUser:
 
-    # @allure.title('логин под существующим пользователем')
-    # def test_login_under_an_existing_user(self, create_and_delete_user):
+class TestLoginUser:
+
+    @allure.title("Авторизация с валидными учетными данными")
+    def test_login_with_existing_credentials(self, create_and_delete_user):
+        user_methods = UserMethods()
+        payload = create_and_delete_user['payload']
+        login_payload = get_login_payload(payload)
+        login_response = user_methods.post_login_user(login_payload)
+        assert login_response.status_code == 200 and login_response.json()["success"] is True
+
+    @allure.title("Авторизация с невалидными учетными данными")
+    def test_login_with_non_existing_credentials(self, create_and_delete_user):
+        user_methods = UserMethods()
+        payload = generate_wrong_creds()
+        login_response = user_methods.post_login_user(payload)
+        assert login_response.status_code == 401 and login_response.json() == LOGIN_ERROR_RESPONSE

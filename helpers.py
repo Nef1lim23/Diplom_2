@@ -1,26 +1,55 @@
 from faker import Faker
-import requests
-from data import URLs
+import random
+from methods.order_methods import OrderMethods
+
+fake = Faker()
 
 
-def create_random_creds():
-    fake = Faker()
-    email = fake.free_email()
-    name = email.split('@')[0]
-    password = fake.password(length=8, special_chars=True, digits=True, upper_case=True, lower_case=True)
-    payload = {
-        "email": email,
-        "password": password,
-        "name": name,
+def generate_user_data():
+    return {
+        "email": fake.email(),
+        "password": fake.password(),
+        "name": fake.name()
     }
-    return payload
+
+def generate_user_data_missing_field():
+    return {
+        "email": fake.email(),
+        "name": fake.name()
+    }
+
+def get_login_payload(payload):
+    return {
+        "email": payload["email"],
+        "password": payload["password"]
+    }
+
+def generate_wrong_creds():
+    return {
+        "email": fake.email(),
+        "password": fake.password()
+    }
+
+def generate_new_email():
+    return {
+        "email": fake.email()
+    }
 
 
-def auth_user_and_get_creds():
-    payload = create_random_creds()
-    response = requests.post(f'{URLs.POST_CREATE_USER}', json=payload)
-    return payload, response
+def generate_ingredients():
+    order_methods = OrderMethods()
+    ingredients_data = order_methods.get_ingredients()
 
+    buns = []
+    mains = []
 
-def get_access_token(response):
-    return response.json().get('accessToken')
+    for item in ingredients_data['data']:
+        if item['type'] == 'bun':
+            buns.append(item['_id'])
+        elif item['type'] == 'main':
+            mains.append(item['_id'])
+
+    random_bun = random.choice(buns)
+    random_main = random.choice(mains)
+
+    return [random_bun, random_main]

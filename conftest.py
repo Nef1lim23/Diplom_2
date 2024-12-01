@@ -1,12 +1,26 @@
-import allure
 import pytest
-from helpers import *
+from faker import Faker
+from methods.user_methods import UserMethods
+from helpers import generate_user_data
+
+fake = Faker()
+user_methods = UserMethods()
 
 
 @pytest.fixture
-@allure.title('Создание пользователя и удаление пользователя при выполнении теста')
 def create_and_delete_user():
-    payload, response = auth_user_and_get_creds()
-    yield payload, response
-    access_token = response.json().get('accessToken')
-    requests.delete(f'{URLs.DELETE_COURIER_URL}', headers={'Authorization': access_token})
+    payload = generate_user_data()
+    created_response = user_methods.post_create_user(payload)
+    if created_response.status_code == 200:
+        access_token = created_response.json()['accessToken']
+        yield {
+            'response': created_response,
+            'payload': payload,
+            'access_token': access_token
+        }
+        user_methods.delete_user(access_token)
+    else:
+        yield {
+            'response': created_response,
+            'payload': payload
+        }
