@@ -1,9 +1,4 @@
-class URLs:
-    BASE_URL = 'https://stellarburgers.nomoreparties.site/api/'
-    POST_CREATE_USER = f'{BASE_URL}auth/register'
-    LOGIN_USER_URL = f'{BASE_URL}auth/login'
-    DELETE_COURIER_URL = f'{BASE_URL}auth/user'
-    GET_INFO_FOR_USER = f'{BASE_URL}auth/user'
+from helpers import generate_ingredients
 
 
 class InvalidDataForRegistration:
@@ -28,18 +23,30 @@ class InvalidDataForRegistration:
         }
     ]
 
-class UserData:
-    email = "testdiplom_1@mail.ru"
-    password = "test123_1"
-    name = "test_dip"
-
 
 DUP_USER_RESPONSE = {
-        "success": False,
-        "message": "User already exists"
-    }
+    "success": False,
+    "message": "User already exists"
+}
 
 LOGIN_ERROR_RESPONSE = {
-        'success': False,
-        'message': 'email or password are incorrect'
-    }
+    'success': False,
+    'message': 'email or password are incorrect'
+}
+
+PATCH_DATA_ERROR = {
+    'success': False,
+    'message': 'You should be authorised'
+}
+
+VALID_INGREDIENTS_PAYLOAD = {
+    'ingredients': generate_ingredients()
+}
+
+EMPTY_INGREDIENTS_PAYLOAD = {
+    'ingredients': []
+}
+
+INVALID_INGREDIENTS_PAYLOAD = {
+    "ingredients": ["invalid_id_0", "invalid_id_1"]
+}

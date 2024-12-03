@@ -5,6 +5,7 @@ from methods.user_methods import UserMethods
 
 user_methods = UserMethods()
 
+
 class TestUserEndpoints:
 
     @allure.title("Создание уникального пользователя")
@@ -19,7 +20,7 @@ class TestUserEndpoints:
         assert duplicate_response.status_code == 403 and duplicate_response.json() == DUP_USER_RESPONSE
 
 
-    @allure.title('создание пользователя без обязательльного поля')
+    @allure.title('создание пользователя без обязательного поля')
     @pytest.mark.parametrize('payload', InvalidDataForRegistration.payloads)
     def test_create_user_without_required_field(self, payload):
         create_courier = UserMethods()

@@ -1,18 +1,27 @@
-import requests
-from data import *
 import allure
-import json
+import requests
+from urls import CREATE_ORDER_ENDPOINT, INGREDIENTS_ENDPOINT
 
 
 class OrderMethods:
-    @allure.step("Создать заказ")
-    def post_orders(self, order_data):
-        order_data = json.dumps(order_data)
-        headers = {'Content-Type': 'application/json'}
-        r = requests.post(f'{URLs.BASE_URL}{URLs.CREATE_ORDERS_URL}', data=order_data, headers=headers)
-        return r
 
-    @allure.step("Получение списка заказов")
-    def get_list_orders(self):
-        r = requests.get(f'{URLs.BASE_URL}{URLs.CREATE_ORDERS_URL}')
-        return r
+    @allure.step("Получение заказов пользователя")
+    def get_orders(self, access_token):
+        headers = {
+            'Authorization': access_token
+        }
+        response = requests.get(f'{CREATE_ORDER_ENDPOINT}', headers=headers)
+        return response
+
+    @allure.step("Создание заказа")
+    def create_order(self, payload, access_token):
+        headers = {
+            'Authorization': access_token
+        }
+        response = requests.post(f'{CREATE_ORDER_ENDPOINT}', json=payload, headers=headers)
+        return response
+
+    @allure.step("Получение ингредиентов")
+    def get_ingredients(self):
+        response = requests.get(f'{INGREDIENTS_ENDPOINT}')
+        return response.json()

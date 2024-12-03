@@ -12,11 +12,13 @@ def generate_user_data():
         "name": fake.name()
     }
 
+
 def generate_user_data_missing_field():
     return {
         "email": fake.email(),
         "name": fake.name()
     }
+
 
 def get_login_payload(payload):
     return {
@@ -24,11 +26,13 @@ def get_login_payload(payload):
         "password": payload["password"]
     }
 
+
 def generate_wrong_creds():
     return {
         "email": fake.email(),
         "password": fake.password()
     }
+
 
 def generate_new_email():
     return {

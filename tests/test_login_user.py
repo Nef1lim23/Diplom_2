@@ -5,6 +5,7 @@ from methods.user_methods import UserMethods
 
 user_methods = UserMethods()
 
+
 class TestLoginUser:
 
     @allure.title("Авторизация с валидными учетными данными")
