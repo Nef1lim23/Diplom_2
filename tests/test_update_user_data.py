@@ -14,6 +14,6 @@ class TestUpdateUser:
         assert update_response.status_code == 200 and update_response.json()['success'] is True
 
     @allure.title('Обновление данных  не авторизованного пользователя')
-    def test_update_auth_user(self, create_and_delete_user):
+    def test_update_not_auth_user(self, create_and_delete_user):
         update_response = user_methods.patch_data_user('')
         assert update_response.status_code == 401 and update_response.json() == PATCH_DATA_ERROR
